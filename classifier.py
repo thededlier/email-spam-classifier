@@ -1,6 +1,8 @@
 import os
 import io
 from pandas import DataFrame
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
 
 def read_files(path):
     for dir_path, dir_names, file_names in os.walk(path):
@@ -30,7 +32,24 @@ def data_frame_from_directory(path, classification):
 data = DataFrame({'message': [], 'class': []})
 
 data = data.append(data_frame_from_directory('./emails/spam', 'spam'), sort=True)
-data = data.append(data_frame_from_directory('e./emails/ham', 'ham'), sort=True)
+data = data.append(data_frame_from_directory('./emails/ham', 'ham'), sort=True)
 
 print("--- Data Summary ---")
 print(data.head())
+
+# Split each message into a list of words and fit them in a MultinomialNB classifier
+vectorizer = CountVectorizer()
+counts = vectorizer.fit_transform(data['message'].values)
+classifier = MultinomialNB()
+targets = data['class'].values
+classifier.fit(counts, targets)
+
+# Predict if spam or not using the classifier
+examples = ['Free Viagra now!!!', "Hi Bob, how about a game of golf tomorrow?"]
+example_counts = vectorizer.transform(examples)
+predictions = classifier.predict(example_counts)
+
+# Print results
+print("--- Results ---")
+for index, prediction in enumerate(predictions):
+    print(index, prediction)
