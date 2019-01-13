@@ -29,8 +29,8 @@ def data_frame_from_directory(path, classification):
 
 data = DataFrame({'message': [], 'class': []})
 
-data = data.append(data_frame_from_directory('./emails/spam', 'spam'))
-data = data.append(data_frame_from_directory('e./emails/ham', 'ham'))
+data = data.append(data_frame_from_directory('./emails/spam', 'spam'), sort=True)
+data = data.append(data_frame_from_directory('e./emails/ham', 'ham'), sort=True)
 
 print("--- Data Summary ---")
 print(data.head())
